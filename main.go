@@ -4,157 +4,183 @@ import (
 	"fmt"
 	"myLS/get"
 	"os"
-	"sort"
-	"strings"
 )
-
-type file struct {
-	CWD      string
-	Names    []string
-	Types    []string
-	Color    []string
-	NotThere bool
-}
 
 func main() {
 	args := os.Args[1:]
-	var files []file
+	var files []get.File
+	var flagsToUse get.Flags
+	var ZeroArgs bool // if running the program with  zero Argmintes or only with flags
+	SupCount := 0     // supFolder counter
 	var err error
 
-	if len(os.Args) == 1 {
+	var mainRoot string
+	args, flagsToUse = get.MyFlags(args, flagsToUse) // didacting the used flags
+	OgArgsLen := len(args)                           // orgenal lenght of input without flags
+	temp := OgArgsLen
 
-		// Initialize the files slice with a file struct.
-		files = append(files, file{})
+	if len(args) == 0 {
+		ZeroArgs = true
+		arg, _ := get.MyPath()
+		mainRoot = arg
+		args = append(args, arg)
+	}
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
+		files = append(files, get.File{})
+		if ZeroArgs {
+			if i == 0 {
+				files[i].CWD = arg
 
-		files[0].CWD, err = os.Getwd()
-		if err != nil {
-			fmt.Println("Error1:", err)
-			files[0].NotThere = true
-			// return
+			} else {
+
+				if SupCount > 0 && OgArgsLen < i+1 {
+					files[i].CWD = get.TrimPath(arg, true)
+				} else {
+					files[i].CWD = get.TrimPath(arg, false)
+				}
+			}
+		} else {
+			files[i].CWD = arg
 		}
 
-		files[0].Names, err = get.GetInfo(files[0].CWD)
+		files[i].Names, files[i].HiddenNames, err = get.GetInfo(arg, flagsToUse)
 		if err != nil {
-			fmt.Println("Error4:", err)
-			files[0].NotThere = true
-			// return
+			files[i].NotThere = true
 		} else {
-			files[0].Types, files[0].Color, err = get.GetFileType(files[0].Names)
+			files[i].Types, files[i].FileColor, args, err = get.GetFileType(files[i].CWD, files[i].Names, args, flagsToUse, SupCount)
 			if err != nil {
-				fmt.Println("Error:", err)
+				fmt.Println("Error111:", err)
 				return
 			}
 		}
-		// fmt.Println("1:", files[0].Names)///////////////////////////////////////////////////////////////////////////////////////////
-		// fmt.Println("2:", files[0].Types)
-
-		get.DisplayInfo(files[0].Names, files[0].Color)
-
-	} else {
-		for i, arg := range args {
-			files = append(files, file{})
-			files[i].CWD = arg
-			files[i].Names, err = get.GetInfo(arg)
-			if err != nil {
-				fmt.Println("Error5:", err)
-				files[i].NotThere = true
-			}
-		}
-
-		// fmt.Println("befor", files) //////////////////////////////////////////
-
-		// Sort the files slice based on NotThere and CWD.
-		sort.Slice(files, func(i, j int) bool {
-			if files[i].NotThere != files[j].NotThere {
-				// Sort by NotThere first (false comes before true).
-				return files[i].NotThere
-			}
-
-			// Sort CWD as if they were lowercase.
-			return strings.ToLower(files[i].CWD) < strings.ToLower(files[j].CWD)
-		})
-
-		// fmt.Println("after", files) //////////////////////////////////////////
-
-		for i, f := range files {
-			if f.NotThere {
-				fmt.Printf("ls: cannot access '%v': No such file or directory\n", f.CWD)
-			} else {
-				if len(files) > 1 && i != len(files)-1 {
-					fmt.Printf("%v:\n", f.CWD)
-					get.DisplayInfo(f.Names, f.Color)
-					fmt.Println()
-				} else if len(files) > 1 && i == len(files)-1 {
-					fmt.Printf("%v:\n", f.CWD)
-					get.DisplayInfo(f.Names, f.Color)
-				} else {
-					get.DisplayInfo(f.Names, f.Color)
-
+		if ZeroArgs {
+			if temp != len(args) {
+				temp = len(args)
+				if SupCount == 0 {
+					OgArgsLen = len(args)
 				}
+				SupCount++
 			}
 		}
-
 	}
+
+	files = get.MySort(files, flagsToUse, ZeroArgs, mainRoot)
+
+	get.MyPrint(files, flagsToUse, ZeroArgs)
 
 }
 
 // func main() {
-// 	args := os.Args
+// 	args := os.Args[1:]
+// 	var files []get.File
+// 	var err error
+// 	var flagsToUse get.Flags
+// 	var ZeroArgs bool
+// 	SupCount := 0
+
+// 	// var IsSubFolder bool
+// 	args, flagsToUse = get.MyFlags(args, flagsToUse)
+// 	OgArgsLen := len(args) // orgenal lenght of input without flags
+// 	temp := OgArgsLen
 // 	if len(args) < 1 {
-// 		fmt.Println("Error\nUsage: go run . [OPTIONS] [FILE|DIR]")
-// 		os.Exit(0)
-// 	}
-
-// 	// Get the current working directory.
-// 	cwd, err := os.Getwd()
-// 	if err != nil {
-// 		fmt.Println("Error:", err)
-// 		return
-// 	}
-// 	// fmt.Println("Current working directory:", cwd)
-
-// 	// // Open the current working directory.
-// 	dir, err := os.Open(cwd)
-// 	if err != nil {
-// 		fmt.Println("Error1:", err)
-// 		return
-// 	}
-// 	defer dir.Close()
-
-// 	// Read the contents of the directory.
-// 	entries, err := dir.ReadDir(0) // Read all entries in the directory.
-// 	if err != nil {
-// 		fmt.Println("Error2:", err)
-// 		return
-// 	}
-
-// 	// Create a slice to store the names of both files and directories.
-// 	var names []string
-
-// 	// Collect both file and directory names (excluding hidden files).
-// 	for _, entry := range entries {
-// 		name := entry.Name()
-// 		if !strings.HasPrefix(name, ".") { // Exclude hidden files.
-// 			names = append(names, name)
+// 		ZeroArgs = true
+// 		if len(args) == 0 {
+// 			arg, _ := get.MyPath()
+// 			args = append(args, arg)
 // 		}
-// 	}
+// 		for i := 0; i < len(args); i++ {
+// 			arg := args[i]
+// 			files = append(files, get.File{})
 
-// 	// Sort the names as if they were lowercase but DisplayInfo the actual values.
-// 	sort.SliceStable(names, func(i, j int) bool {
-// 		return strings.ToLower(names[i]) < strings.ToLower(names[j])
-// 	})
+// 			if i == 0 {
+// 				files[i].CWD = arg
 
-// 	// Print the original case names.
-// 	for i, name := range names {
-// 		if i == 0 {
-// 			fmt.Printf("%v ", name)
-// 		} else if i == len(names)-1 {
-// 			fmt.Printf(" %v", name)
-// 		} else {
-// 			fmt.Printf(" %v ", name)
+// 			} else {
+
+// 				if SupCount > 0 && OgArgsLen < i+1 {
+// 					files[i].CWD = get.TrimPath(arg, true)
+// 				} else {
+// 					files[i].CWD = get.TrimPath(arg, false)
+// 				}
+// 			}
+
+// 			files[i].Names, files[i].HiddenNames, err = get.GetInfo(arg,flagsToUse)
+// 			if err != nil {
+// 				files[i].NotThere = true
+// 			} else {
+// 				files[i].Types, files[i].FileColor, args, err = get.GetFileType(files[i].CWD, files[i].Names, args, flagsToUse)
+// 				if err != nil {
+// 					fmt.Println("Error111:", err)
+// 					return
+// 				}
+// 			}
+// 			if temp != len(args) {
+// 				temp = len(args)
+// 				if SupCount == 0 {
+// 					OgArgsLen = len(args)
+// 				}
+// 				SupCount++
+// 			}
+// 		}
+// 		fmt.Println("count", SupCount)
+// 		files = get.MySort(files, flagsToUse)
+
+// 		get.MyPrint(files, flagsToUse, ZeroArgs)
+
+// 	} else {
+
+// 		for i := 0; i < len(args); i++ {
+// 			arg := args[i]
+// 			files = append(files, get.File{})
+// 			files[i].CWD = arg
+// 			files[i].Names, files[i].HiddenNames, err = get.GetInfo(arg)
+// 			if err != nil {
+// 				files[i].NotThere = true
+// 			} else {
+// 				files[i].Types, files[i].FileColor, args, err = get.GetFileType(files[i].CWD, files[i].Names, args, flagsToUse)
+// 				if err != nil {
+// 					fmt.Println("Error222:", err)
+// 					return
+// 				}
+// 			}
 // 		}
 
+// 		// fmt.Println("befor", files) //////////////////////////////////////////
+
+// 		files = get.MySort(files, flagsToUse)
+// 		// // Sort the files slice based on NotThere and CWD.
+// 		// sort.Slice(files, func(i, j int) bool {
+// 		// 	if files[i].NotThere != files[j].NotThere {
+// 		// 		// Sort by NotThere first (false comes before true).
+// 		// 		return files[i].NotThere
+// 		// 	}
+
+// 		// 	// Sort CWD as if they were lowercase.
+// 		// 	return strings.ToLower(files[i].CWD) < strings.ToLower(files[j].CWD)
+// 		// })
+
+// 		// fmt.Println("after", files) //////////////////////////////////////////
+
+// 		get.MyPrint(files, flagsToUse, ZeroArgs)
+// 		// for i, f := range files {
+// 		// 	if f.NotThere {
+// 		// 		fmt.Printf("ls: cannot access '%v': No such file or directory\n", f.CWD)
+// 		// 	} else {
+// 		// 		if len(files) > 1 && i != len(files)-1 {
+// 		// 			fmt.Printf("%v:\n", f.CWD)
+// 		// 			get.DisplayInfo(f.Names, f.FileColor)
+// 		// 			fmt.Println()
+// 		// 		} else if len(files) > 1 && i == len(files)-1 {
+// 		// 			fmt.Printf("%v:\n", f.CWD)
+// 		// 			get.DisplayInfo(f.Names, f.FileColor)
+// 		// 		} else {
+// 		// 			get.DisplayInfo(f.Names, f.FileColor)
+
+// 		// 		}
+// 		// 	}
+// 		// }
+
 // 	}
-// 	defer fmt.Println()
 
 // }

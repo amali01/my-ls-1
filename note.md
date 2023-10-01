@@ -1,15 +1,16 @@
-    Blue: Directory or folders
-    Green: Executable or recognized data file
-    Cyan or Sky Blue: Symbolic link file
-    Yellow with black background: Device
-    Magenta or Pink: Graphic image file
-    Red: Archive file
-    Red with black background: Broken link
+ ls -R
 
-Directory or folders
-Executable or recognized data file
-Symbolic link file
-Device
-Graphic image file
-Archive file
-Broken link
+
+ -R done
+ -a done
+ -r done
+ -t 
+ -l 
+
+
+to add 
+Listing files and directories with the ‘/’ character at the end
+
+If you wish to go ahead and further distinguish files from folders, use the -F flag such that folder will appear with a forward slash character ‘/’ at the end. Syntax
+
+$ ls -F

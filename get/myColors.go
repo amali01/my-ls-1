@@ -5,20 +5,22 @@ import (
 )
 
 // Color returns the ANSI escape sequence for the specified color
-func Color(fileType string) string {
+func MyColor(fileType string) string {
 	var colors = map[string]string{
 		"reset": "\033[0m",
 		"red":   "\033[31m",
 		"green": "\033[32m",
-		// "yellow":     "\033[33m",
-		"blue": "\033[34m",
-		// "purple":     "\033[35m",
-		"cyan": "\033[36m",
+		"blue":  "\033[34m",
+		"cyan":  "\033[36m",
+		"pink":  "\033[38;5;206m",
+
+		// "yellow": "\033[33m",
+		// "purple": "\033[35m",
+
 		// "white":      "\033[37m",
 		// "gray":       "\033[90m",
 		// "darkred":    "\033[91m",
 		// "orange":     "\033[38;5;208m",
-		"pink": "\033[38;5;206m",
 		// "gold":       "\033[38;5;220m",
 		// "teal":       "\033[38;5;51m",
 		// "lavender":   "\033[38;5;183m",
