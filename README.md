@@ -1,16 +1,16 @@
 <h1 align="center">My-Ls Project</h1>
 
-<h1 align=center>
 
-<!-- ![Push-swap](myLsLogo.png) -->
-![Push-swap](logo1.png)
-
-</h1>
+<p align="center">
+    <img src="logo1.png" alt="My-Ls Logo" />
+    <!-- <img src="myLsLogo.png" alt="My-Ls Logo" /> -->
+</p>
 
 <h2 align="center">About The Project</h2>
-My-ls is a project, that consists on creating your own ls command.
+<h4 align="center">My-ls is a project that aims to create a custom ls command using Go.</h4>
 
 ## Getting Started
+You can run the My-Ls project with the following command:
 ```console
 git clone https://learn.reboot01.com/git/amali/my-ls-1.git
 cd my-ls
@@ -20,13 +20,42 @@ cd my-ls
 ```
 go run . [OPTIONS] [FILE|DIR]
 ```
-
-## Examples
+#### Directory Structure:
+```console
+─ my-ls-1/
+├── get/
+│   ├── myInfo.go
+│   ├── myStruct.go
+│   ├── mySort.go
+│   ├── CleanInput.go  
+│   ├── myPrint.go
+│   ├── myFlags.go
+│   └── myColors.go
+|
+├── main.go
+├── go.mod
+├── README.md
+└── ...
 ```
-go run . -l == ls -l
-go run . -r == ls -r
-go run . folder/ == ls folder/
-go run . -lraRt == ls -lraRt
+## Examples
+Here are some examples of how to use My-Ls:
+
+- List in long format (equivalent to ls -l):
+```
+go run . -l 
+```
+- List in reverse order (equivalent to ls -r):
+```
+go run . -r 
+```
+- List contents of a specific folder (e.g., folder/):
+```
+go run . folder/
+
+```
+- Combine multiple options (e.g., -lraRt):
+```
+go run . -lraRt
 ```
 
 ## Available options
@@ -39,7 +68,7 @@ go run . -lraRt == ls -lraRt
 
 ## Additional information
 
-Only standard go packages were in use.
+- Only standard go packages were in use.
 
 ## Authors
 
