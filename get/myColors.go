@@ -4,36 +4,17 @@ import (
 	"strings"
 )
 
-// Color returns the ANSI escape sequence for the specified color
+// MyColor returns the ANSI escape sequence for the specified color based on the file type.
 func MyColor(fileType string) string {
 	var colors = map[string]string{
-		"reset": "\033[0m",
-		"red":   "\033[31m",
-		"green": "\033[32m",
-		"blue":  "\033[34m",
-		"cyan":  "\033[36m",
-		"pink":  "\033[38;5;206m",
+		"reset": "\033[0m",        // Reset color.
+		"red":   "\033[31m",       // Red color.
+		"green": "\033[32;1m",     // Green color with bold font.
+		"blue":  "\033[34;1m",     // Blue color with bold font.
+		"cyan":  "\033[36;1m",     // Cyan color with bold font.
+		"pink":  "\033[38;5;206m", // Pink color.
 
-		// "yellow": "\033[33m",
-		// "purple": "\033[35m",
-
-		// "white":      "\033[37m",
-		// "gray":       "\033[90m",
-		// "darkred":    "\033[91m",
-		// "orange":     "\033[38;5;208m",
-		// "gold":       "\033[38;5;220m",
-		// "teal":       "\033[38;5;51m",
-		// "lavender":   "\033[38;5;183m",
-		// "brown":      "\033[38;5;130m",
-		// "lightblue":  "\033[38;5;39m",
-		// "magenta":    "\033[38;5;200m",
-		// "olive":      "\033[38;5;100m",
-		// "salmon":     "\033[38;5;203m",
-		// "skyblue":    "\033[38;5;111m",
-		// "darkpurple": "\033[38;5;53m",
-		// "lime":       "\033[38;5;46m",
-
-		// Add more colors here as needed
+		// You can add more colors here as needed.
 	}
 
 	// Define a variable for the color.
@@ -42,23 +23,23 @@ func MyColor(fileType string) string {
 	// Use a switch statement to set the color based on the file type.
 	switch fileType {
 	case "Directory":
-		color = "Blue"
+		color = "Blue" // Set color to Blue for directories.
 	case "Executable":
-		color = "Green"
+		color = "Green" // Set color to Green for executable files.
 	case "Link":
-		color = "Cyan"
+		color = "Cyan" // Set color to Cyan for symbolic links.
 	case "Image":
-		color = "Pink"
+		color = "Pink" // Set color to Pink for image files.
 	case "Archive":
-		color = "Red"
+		color = "Red" // Set color to Red for archive files.
 	default:
 		color = "reset" // Set a default color or handle unknown types.
 	}
 
 	color = strings.ToLower(color)
 	if color1, ok := colors[color]; ok {
-		return color1
+		return color1 // Return the ANSI escape sequence for the specified color.
 	}
 
-	return "" // Return an empty string for unrecognized colors
+	return "" // Return an empty string for unrecognized colors.
 }

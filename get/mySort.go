@@ -1,11 +1,12 @@
 package get
 
 import (
+	"os"
 	"sort"
 	"strings"
 )
 
-func MySort(files []File, flagsToUse Flags, ZeroArgs bool, mainRoot string) []File {
+func MySort(files []File, flagsToUse Flags, ZeroArgs bool) []File {
 	// Sort the files slice based on NotThere and CWD.
 	var temp File
 	var tempIndex int
@@ -19,6 +20,30 @@ func MySort(files []File, flagsToUse Flags, ZeroArgs bool, mainRoot string) []Fi
 			// Sort by NotThere first (false comes before true).
 			return files[i].NotThere
 		}
+		if files[i].NotFolder != files[j].NotFolder {
+			// Sort by NotFolder first (false comes before true).
+			return files[i].NotFolder
+		}
+		if flagsToUse.Flag_t {
+
+			fileInfo1, err1 := os.Lstat(files[i].CWD)
+			fileInfo2, err2 := os.Lstat(files[j].CWD)
+
+			// Handle errors, e.g., if there's a problem getting file info.
+			if err1 != nil || err2 != nil {
+				return false // You may want to handle errors differently.
+			}
+
+			// Compare files by ModTime.
+			if flagsToUse.Flag_r {
+				// If Flag_r is true, reverse the order.
+				return fileInfo1.ModTime().Before(fileInfo2.ModTime())
+
+			}
+			return fileInfo1.ModTime().After(fileInfo2.ModTime())
+
+		}
+
 		if flagsToUse.Flag_r && i != 0 {
 			// If Flag_r is true, reverse the order.
 			return strings.ToLower(files[i].CWD) > strings.ToLower(files[j].CWD)
