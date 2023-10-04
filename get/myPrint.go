@@ -17,19 +17,19 @@ func MyPrint(files []File, flagsToUse Flags, ZeroArgs bool) {
 			}
 		}
 
-		if f.NotThere && !files[i].NotFolder {
+		if f.NotThere && !files[i].NotFolder { //file or directory does not exist.
 			fmt.Printf("ls: cannot access '%v': No such file or directory\n", f.CWD)
-		} else if files[i].NotFolder {
+
+		} else if files[i].NotFolder { //if it's not a directory or folder
 			if flagsToUse.Flag_l {
-
-				if f.SoftLinks[0] == "" {
-					fmt.Println(f.Permission[0], f.Hardlinks[0], f.Group[0], f.Owner[0], f.Size[0], f.Month[0], f.Day[0], f.ModificationTime[0], f.CWD)
+				if f.SoftLinks[i] == "" { //if not a softlink
+					fmt.Println(f.Permission[i], f.Hardlinks[i], f.Group[i], f.Owner[i], f.AlingSize[i], f.Month[i], f.Day[i], f.ModificationTime[i], f.CWD)
+					// fmt.Println(f.Permission[0], f.Hardlinks[0], f.Group[0], f.Owner[0], f.Size[0], f.Month[0], f.Day[0], f.ModificationTime[0], f.CWD)
 				} else {
-					fmt.Println(f.Permission[i], f.Hardlinks[i], f.Group[i], f.Owner[i], f.Size[i], f.Month[i], f.Day[i], f.ModificationTime[i], f.FileColor[i], f.CWD, "\033[0m", "->", f.SoftLinks[i])
-
+					fmt.Println(f.Permission[i], f.Hardlinks[i], f.Group[i], f.Owner[i], f.AlingSize[i], f.Month[i], f.Day[i], f.ModificationTime[i], f.FileColor[i], f.CWD, "\033[0m", "->", f.SoftLinks[i])
 				}
 			} else {
-				fmt.Println(f.FileName)
+				fmt.Println(f.FileName) //without flag -l
 			}
 
 		} else {
@@ -66,10 +66,10 @@ func MyPrint(files []File, flagsToUse Flags, ZeroArgs bool) {
 					fmt.Println("total:", f.TotalSize)
 				}
 
-				if flagsToUse.Flag_l {
+				if flagsToUse.Flag_l { // if flag -l with zero args
 					FullInfo(f)
 				} else {
-					DisplayInfo(f.Names, f.FileColor)
+					DisplayInfo(f.Names, f.FileColor) //if zero args with no flags or (flags -a -t -r)
 				}
 
 			}
@@ -78,7 +78,7 @@ func MyPrint(files []File, flagsToUse Flags, ZeroArgs bool) {
 }
 
 func DisplayInfo(names []string, color []string) {
-	// Print the original case names.
+	// Print the original case names. if flag l is not used.
 	for i, name := range names {
 		if color[i] == "" {
 			if i == 0 {
@@ -104,19 +104,19 @@ func DisplayInfo(names []string, color []string) {
 }
 
 func FullInfo(file File) {
-	// Print the Full Informations.
+	// Print the Full Informations. when flag l is used.
 	for i, name := range file.Names {
 		if file.FileColor[i] == "reset" {
 			if file.SoftLinks[i] == "" {
-				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.Size[i], file.Month[i], file.Day[i], file.ModificationTime[i], name)
+				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.AlingSize[i], file.Month[i], file.Day[i], file.ModificationTime[i], name)
 			} else {
-				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.Size[i], file.Month[i], file.Day[i], file.ModificationTime[i], name, "->", file.SoftLinks[i])
+				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.AlingSize[i], file.Month[i], file.Day[i], file.ModificationTime[i], name, "->", file.SoftLinks[i])
 			}
 		} else {
 			if file.SoftLinks[i] == "" {
-				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.Size[i], file.Month[i], file.Day[i], file.ModificationTime[i], file.FileColor[i], name, "\033[0m")
+				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.AlingSize[i], file.Month[i], file.Day[i], file.ModificationTime[i], file.FileColor[i], name, "\033[0m")
 			} else {
-				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.Size[i], file.Month[i], file.Day[i], file.ModificationTime[i], file.FileColor[i], name, "\033[0m", "->", file.SoftLinks[i])
+				fmt.Println(file.Permission[i], file.Hardlinks[i], file.Group[i], file.Owner[i], file.AlingSize[i], file.Month[i], file.Day[i], file.ModificationTime[i], file.FileColor[i], name, "\033[0m", "->", file.SoftLinks[i])
 			}
 		}
 	}

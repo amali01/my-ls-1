@@ -111,9 +111,9 @@ func GetFileType(file File, args []string, flagsToUse Flags, mainRoot string, in
 
 		// Get file information
 		fileInfo, err := os.Lstat(filePath)
-		// fileInfo, err := os.Stat(filePath) /// does not recognize symbolic links
+		// fileInfo, err := os.Stat(filePath) /// does not recognize symbolic links "softlinks""
 		if err != nil {
-			fmt.Println("iiiiii", err) ////////////////////////////////////////////////////////////////////////
+			// fmt.Println("iiiiii", err) ////////////////////////////////////////////////////////////////////////
 			return file, args, err
 		}
 
@@ -204,7 +204,7 @@ func AppendData(file File) File {
 		Permission = append(Permission, fmt.Sprintf("%v", fileInfo.Mode()))
 
 		Day = append(Day, fileInfo.ModTime().Day())
-		Month = append(Month, fileInfo.ModTime().Format("Jan"))
+		Month = append(Month, fileInfo.ModTime().Format("Jan "))
 
 		Size = append(Size, fileInfo.Size())
 
@@ -229,7 +229,7 @@ func AppendData(file File) File {
 			Permission = append(Permission, fmt.Sprintf("%v", fileInfo.Mode()))
 
 			Day = append(Day, fileInfo.ModTime().Day())
-			Month = append(Month, fileInfo.ModTime().Format("Jan"))
+			Month = append(Month, fileInfo.ModTime().Format("Jan "))
 			Size = append(Size, fileInfo.Size())
 			file.SoftLinks = append(file.SoftLinks, "")
 			if stat, ok := fileInfo.Sys().(*syscall.Stat_t); ok {

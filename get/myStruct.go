@@ -21,6 +21,7 @@ type File struct {
 	TotalSize        int      // Sum of all sizes in KB.
 	NotThere         bool     // Indicates if the file or folder does not exist.
 	NotFolder        bool     // Indicates if it's not a directory or folder.
+	AlingSize        []string
 }
 
 // Flags represents command-line flags used in the ls command.

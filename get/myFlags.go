@@ -32,15 +32,15 @@ func DetectFlag(flagToCheck string, flagsToUse Flags) (Flags, bool) {
 		os.Exit(0)
 	}
 	for _, i := range flagToCheck {
-		if i == 'R' && flagsToUse.Flag_R == false {
+		if i == 'R' && !flagsToUse.Flag_R {
 			flagsToUse.Flag_R = true
-		} else if i == 'a' && flagsToUse.Flag_a == false {
+		} else if i == 'a' && !flagsToUse.Flag_a {
 			flagsToUse.Flag_a = true
-		} else if i == 'r' && flagsToUse.Flag_r == false {
+		} else if i == 'r' && !flagsToUse.Flag_r {
 			flagsToUse.Flag_r = true
-		} else if i == 'l' && flagsToUse.Flag_l == false {
+		} else if i == 'l' && !flagsToUse.Flag_l {
 			flagsToUse.Flag_l = true
-		} else if i == 't' && flagsToUse.Flag_t == false {
+		} else if i == 't' && !flagsToUse.Flag_t {
 			flagsToUse.Flag_t = true
 		} else if i == '-' && !dashFound {
 			dashFound = true

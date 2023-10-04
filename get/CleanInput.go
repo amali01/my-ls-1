@@ -1,6 +1,7 @@
 package get
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -78,10 +79,53 @@ func IfContains(RootNames []string, arg string) bool {
 	return false
 }
 
-// // Checks if folder or file is hidden
-// func IsHidden(filename string) bool {
-// 	if filename[0:1] == "." {
-// 		return true
-// 	}
-// 	return false
-// }
+// SizeFormat formats the Size field in a slice of File structs with leading spaces.
+func SizeFormat(files []File) []File {
+	for i := range files {
+		// Skip files that are not there
+		if files[i].NotThere {
+			continue
+		}
+
+		// Find the maximum width of numbers in the Size slice
+		maxWidth := FindMaxWidth(files[i].Size)
+
+		// Create a new slice to store updated sizes
+		updatedSize := make([]string, len(files[i].Size))
+
+		// Update each size with leading spaces and store in updatedSize
+		for j, num := range files[i].Size {
+			updatedSize[j] = fmt.Sprintf("%*d", maxWidth, num)
+		}
+
+		// Assign the updatedSize to the AlingSize field in the File struct
+		files[i].AlingSize = updatedSize
+	}
+
+	return files
+}
+
+// findMaxWidth finds the maximum width of numbers in a slice
+func FindMaxWidth(numbers []int64) int {
+	maxWidth := 0
+	for _, num := range numbers {
+		// Calculate the width of the number
+		width := NumWidth(num)
+
+		// Update maxWidth if width is greater
+		if width > maxWidth {
+			maxWidth = width
+		}
+	}
+	return maxWidth
+}
+
+// numWidth calculates the width of an int64 number
+func NumWidth(num int64) int {
+	width := 0
+	for num != 0 {
+		num /= 10
+		width++
+	}
+	return width
+}

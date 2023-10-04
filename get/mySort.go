@@ -11,7 +11,7 @@ func MySort(files []File, flagsToUse Flags, ZeroArgs bool) []File {
 	var temp File
 	var tempIndex int
 
-	if ZeroArgs {
+	if ZeroArgs || flagsToUse.Flag_R {
 		temp = files[0]
 	}
 
@@ -38,10 +38,9 @@ func MySort(files []File, flagsToUse Flags, ZeroArgs bool) []File {
 			if flagsToUse.Flag_r {
 				// If Flag_r is true, reverse the order.
 				return fileInfo1.ModTime().Before(fileInfo2.ModTime())
-
 			}
-			return fileInfo1.ModTime().After(fileInfo2.ModTime())
 
+			return fileInfo1.ModTime().After(fileInfo2.ModTime())
 		}
 
 		if flagsToUse.Flag_r && i != 0 {
@@ -52,7 +51,7 @@ func MySort(files []File, flagsToUse Flags, ZeroArgs bool) []File {
 		return strings.ToLower(files[i].CWD) < strings.ToLower(files[j].CWD)
 	})
 
-	if ZeroArgs {
+	if ZeroArgs || flagsToUse.Flag_R {
 		// Find the index of the file that matches temp
 		for i, f := range files {
 			if f.CWD == temp.CWD {
@@ -62,7 +61,7 @@ func MySort(files []File, flagsToUse Flags, ZeroArgs bool) []File {
 		}
 	}
 
-	if ZeroArgs && tempIndex != 0 {
+	if tempIndex != 0 {
 		// Remove temp from its current position
 		tempFile := files[tempIndex]
 		files = append(files[:tempIndex], files[tempIndex+1:]...)

@@ -12,14 +12,10 @@ func main() {
 	var files []get.File
 	var flagsToUse get.Flags
 	var ZeroArgs bool // Indicates if running the program with zero arguments or only with flags
-	SubCount := 0     // Subfolder counter
 	var err error
 
 	// Parse command-line arguments and flags
 	args, flagsToUse = get.MyFlags(args, flagsToUse) // Extract and categorize the used flags
-
-	// Store the original length of input arguments without flags
-	OgArgsLen := len(args)
 
 	// Initialize the root directory information
 	var mainRoot get.File
@@ -46,22 +42,17 @@ func main() {
 			if !files[i].NotFolder || len(files[i].Names) > 1 { // Enter if it's a folder and not a symbolic link
 				files[i], args, err = get.GetFileType(files[i], args, flagsToUse, mainRoot.CWD, i)
 				if err != nil {
-					fmt.Println("Error111:", err)
+					fmt.Println("Error:", err)
 					return
 				}
 			} else {
 				files[i].FileName = arg
 			}
 		}
-
-		// Check if the number of arguments has changed (indicating a subfolder)
-		if OgArgsLen != len(args) {
-			OgArgsLen = len(args)
-			SubCount++
-		}
 	}
 
 	// Sort the files and print the output
 	files = get.MySort(files, flagsToUse, ZeroArgs)
+	files = get.SizeFormat(files)
 	get.MyPrint(files, flagsToUse, ZeroArgs)
 }
