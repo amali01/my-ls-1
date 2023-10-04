@@ -69,6 +69,7 @@ go run . -lraRt
 ## Additional information
 
 - Only standard go packages were in use.
+- For faster audit use bash audit.sh   
 
 ## Authors
 
