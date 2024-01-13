@@ -11,7 +11,7 @@
 ## Getting Started
 You can run the My-Ls project with the following command:
 ```console
-git clone git clone https://github.com/emahfoodh/my-ls-1.git
+git clone git clone https://github.com/amali01/my-ls-1.git
 cd my-ls
 ```
 
