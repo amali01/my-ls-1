@@ -11,7 +11,7 @@
 ## Getting Started
 You can run the My-Ls project with the following command:
 ```console
-git clone https://learn.reboot01.com/git/amali/my-ls-1.git
+git clone git clone https://github.com/emahfoodh/my-ls-1.git
 cd my-ls
 ```
 
@@ -72,5 +72,5 @@ go run . -lraRt
 
 ## Authors
 
-- emahfood
-- amali
+- amali01 (Amjad Ali)
+- emahfoodh (Eman Mahfoodh)
