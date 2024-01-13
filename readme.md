@@ -3,7 +3,6 @@
 
 <p align="center">
     <img src="logo1.png" alt="My-Ls Logo" />
-    <!-- <img src="myLsLogo.png" alt="My-Ls Logo" /> -->
 </p>
 
 <h2 align="center">About The Project</h2>
